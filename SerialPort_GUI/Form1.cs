@@ -206,6 +206,11 @@ namespace SerialPort_GUI
         {
             data = "";
             outBox.Text = "";
+            byReceived = 0;
+            byReceivedN.Text = formatData(byReceived); //update status strip
+            bySent = 0;
+            bySentN.Text = formatData(bySent); //update status strip
+
             inBox.Clear();
         }
 
@@ -222,15 +227,13 @@ namespace SerialPort_GUI
             if (bytes < 1048576)
             {
                 float byt = bytes / 1024f;
-                return byt.ToString("F3") + " KB";
+                return byt.ToString("F2") + " KB";
             }
             else
             {
                 float byt = bytes / 1048576f;
-                return byt.ToString("F3") + " MB";
+                return byt.ToString("F2") + " MB";
             }
         }
-
-
     }
 }

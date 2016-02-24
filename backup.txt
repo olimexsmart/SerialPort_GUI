@@ -1,0 +1,180 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.IO.Ports;
+using System.Threading;
+
+namespace SerialPort_GUI
+{
+    public partial class MainForm : Form
+    {
+        SerialPort COMport;
+        bool connected = false;
+        string inbox = "";
+
+ 
+
+        public MainForm()
+        {
+            InitializeComponent();
+            
+            //Pre-select the first port
+            COMpick.Items.Clear();
+            foreach (string s in SerialPort.GetPortNames())
+            {
+                COMpick.Items.Add(s);
+            }
+            try
+            {
+                COMpick.SelectedIndex = 0;
+            }
+            catch (ArgumentOutOfRangeException) { }
+        }
+
+        private void comboBox1_DropDown(object sender, EventArgs e)
+        {
+            COMpick.Items.Clear();
+            foreach (string s in SerialPort.GetPortNames())
+            {
+                COMpick.Items.Add(s);
+            }
+        }
+
+        private void ConnectB_Click(object sender, EventArgs e)
+        {
+            if (!connected)
+            {
+                int baud = Convert.ToInt32(baudRate.SelectedItem.ToString());
+                COMport = new SerialPort(COMpick.SelectedItem.ToString(), baud, Parity.None, 8, StopBits.One);
+                try
+                {
+                    COMport.Open();
+                    connected = true;
+                    ConnectB.Text = "Disconnect";
+                }
+                catch (ArgumentOutOfRangeException)
+                {
+                    MessageBox.Show("Baud rate not valid.");
+                    connected = false;
+                }
+                catch (ArgumentException)
+                {
+                    MessageBox.Show("Port name not valid.");
+                    connected = false;
+                }
+                catch (UnauthorizedAccessException)
+                {
+                    MessageBox.Show("Access denied, try close applications that may using the port.");
+                    connected = false;
+                }
+
+                if (backWorker.IsBusy != true)
+                {
+                    backWorker.RunWorkerAsync();
+                }
+            }
+            else
+            {
+                connected = false;
+
+                backWorker.CancelAsync();
+
+                COMport.Close();
+                COMport.Dispose();
+                  
+               ConnectB.Text = "Connect";
+            }
+        }
+
+        private void backWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            BackgroundWorker worker = sender as BackgroundWorker;
+
+            while (true)
+            {
+                if (worker.CancellationPending == true)
+                {
+                    e.Cancel = true;
+                    break;
+                }
+                else if(COMport.IsOpen)
+                {
+                    // Get data and print it in the form
+                    try
+                    {
+                        inbox = COMport.ReadLine() + '\n';
+                    }
+                    catch (InvalidOperationException) { }
+                   //Scroll down the form, passing something useless to make it work
+                    worker.ReportProgress(inbox.Length);
+                }
+            }
+            
+        }
+
+        private void backWorker_ProgressChanged_1(object sender, ProgressChangedEventArgs e)
+        {
+            outBox.Text += inbox;
+            SetAutoScrollMargins();
+            //add a autoscroll check box
+            panel1.VerticalScroll.Value = panel1.VerticalScroll.Maximum;
+        }
+
+        private void SetAutoScrollMargins()
+        {
+            /* If the text box is outside the panel's bounds, 
+               turn on auto-scrolling and set the margin. */
+            if (outBox.Location.X > panel1.Location.X ||
+               outBox.Location.Y > panel1.Location.Y)
+            {
+                panel1.AutoScroll = true;
+                /* If the AutoScrollMargin is set to less 
+                   than (5,5), set it to 5,5. */
+                if (panel1.AutoScrollMargin.Width < 5 ||
+                   panel1.AutoScrollMargin.Height < 5)
+                {
+                    panel1.SetAutoScrollMargin(5, 5);
+                }
+            }
+        }
+
+        private void SendB_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                COMport.Write(inBox.Text);
+            }
+            catch(NullReferenceException)
+            {
+                MessageBox.Show("Not connected");
+            }
+            catch(InvalidOperationException)
+            {
+                MessageBox.Show("Not connected");
+            }
+
+            inBox.Clear();
+        }
+
+        private void inBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyData == Keys.Return)
+            {
+                SendB_Click(inBox, e);
+            }
+
+        }
+
+        private void quitMenu_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+    }
+}
