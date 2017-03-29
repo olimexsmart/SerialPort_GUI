@@ -31,14 +31,10 @@ namespace SerialPort_GUI
             InitializeComponent();
             //Pre-select the first port
             COMpick.Items.Clear();
-            foreach (string s in SerialPort.GetPortNames())
-            {
+            foreach (string s in SerialPort.GetPortNames())        
                 COMpick.Items.Add(s);
-            }
-            try
-            {
-                COMpick.SelectedIndex = 0;
-            }
+
+            try { COMpick.SelectedIndex = 0; }
             catch (ArgumentOutOfRangeException) { }
 
             //Pre-select 9600, the most used by Arduino
@@ -100,7 +96,7 @@ namespace SerialPort_GUI
                 }
                 catch (UnauthorizedAccessException)
                 {
-                    MessageBox.Show("Access denied, try close applications that may using the port.");
+                    MessageBox.Show("Access denied, try close applications that may be using the port.");
                     connected = false;
                 }
             }
