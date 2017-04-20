@@ -36,9 +36,8 @@
             this.inBox = new System.Windows.Forms.TextBox();
             this.SendB = new System.Windows.Forms.Button();
             this.baudRate = new System.Windows.Forms.ComboBox();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.outBox = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.outBox = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
@@ -69,7 +68,6 @@
             this.bySentN = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStatus = new System.Windows.Forms.ToolStripStatusLabel();
-            this.panel1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.menuStrip.SuspendLayout();
@@ -148,38 +146,14 @@
             this.baudRate.Size = new System.Drawing.Size(88, 21);
             this.baudRate.TabIndex = 6;
             // 
-            // panel1
-            // 
-            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.panel1.AutoScroll = true;
-            this.panel1.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel1.Controls.Add(this.outBox);
-            this.panel1.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.panel1.Location = new System.Drawing.Point(6, 46);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(398, 375);
-            this.panel1.TabIndex = 7;
-            // 
-            // outBox
-            // 
-            this.outBox.AutoSize = true;
-            this.outBox.Font = new System.Drawing.Font("Courier New", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.outBox.Location = new System.Drawing.Point(0, 0);
-            this.outBox.Name = "outBox";
-            this.outBox.Size = new System.Drawing.Size(0, 16);
-            this.outBox.TabIndex = 0;
-            // 
             // groupBox1
             // 
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Controls.Add(this.outBox);
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.label1);
-            this.groupBox1.Controls.Add(this.panel1);
             this.groupBox1.Controls.Add(this.COMpick);
             this.groupBox1.Controls.Add(this.baudRate);
             this.groupBox1.Controls.Add(this.ConnectB);
@@ -189,6 +163,21 @@
             this.groupBox1.TabIndex = 8;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Output";
+            // 
+            // outBox
+            // 
+            this.outBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.outBox.HideSelection = false;
+            this.outBox.Location = new System.Drawing.Point(6, 46);
+            this.outBox.Multiline = true;
+            this.outBox.Name = "outBox";
+            this.outBox.ReadOnly = true;
+            this.outBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.outBox.Size = new System.Drawing.Size(398, 375);
+            this.outBox.TabIndex = 9;
+            this.outBox.WordWrap = false;
             // 
             // label2
             // 
@@ -370,7 +359,7 @@
             // 
             // timer
             // 
-            this.timer.Interval = 50;
+            this.timer.Interval = 25;
             this.timer.Tick += new System.EventHandler(this.timer_Tick);
             // 
             // statusStrip1
@@ -416,7 +405,7 @@
             // toolStripStatusLabel1
             // 
             this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            this.toolStripStatusLabel1.Size = new System.Drawing.Size(152, 19);
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(183, 19);
             this.toolStripStatusLabel1.Spring = true;
             this.toolStripStatusLabel1.Text = " ";
             // 
@@ -443,8 +432,6 @@
             this.MinimumSize = new System.Drawing.Size(450, 550);
             this.Name = "MainForm";
             this.Text = "COMportBurst";
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
@@ -466,8 +453,6 @@
         private System.Windows.Forms.TextBox inBox;
         private System.Windows.Forms.Button SendB;
         private System.Windows.Forms.ComboBox baudRate;
-        private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Label outBox;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Label label2;
@@ -499,6 +484,7 @@
         private System.Windows.Forms.ToolStripStatusLabel bySentN;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
         private System.Windows.Forms.ToolStripStatusLabel toolStatus;
+        private System.Windows.Forms.TextBox outBox;
     }
 }
 

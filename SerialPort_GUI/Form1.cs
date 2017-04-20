@@ -20,8 +20,8 @@ namespace SerialPort_GUI
     {
         bool connected = false;
         SerialPort serialPort;
+        StringBuilder sb;
         string data = ""; //main buffer
-        static int REFRESH_BUFF = 3072; //how many chars into the output label at once
         ulong byReceived = 0;
         ulong bySent = 0;
        
@@ -29,6 +29,7 @@ namespace SerialPort_GUI
         public MainForm()
         {
             InitializeComponent();
+            sb = new StringBuilder(data);
             //Pre-select the first port
             COMpick.Items.Clear();
             foreach (string s in SerialPort.GetPortNames())        
@@ -41,7 +42,7 @@ namespace SerialPort_GUI
             baudRate.SelectedIndex = 2;
 
             //Instance the port 
-            serialPort = new SerialPort();
+            //serialPort = new SerialPort();
         }
 
         //Update the list of serialports
@@ -72,6 +73,7 @@ namespace SerialPort_GUI
             {
                 //Instance with all parameters
                 serialPort = new SerialPort(COMpick.SelectedItem.ToString(), baud, Parity.None, 8, StopBits.One);
+                serialPort.DataReceived += SerialPort_DataReceived;
                 try
                 {
                     serialPort.Open();
@@ -109,6 +111,11 @@ namespace SerialPort_GUI
                 toolStatus.Text = "Disconnected";
                 ConnectB.Text = "Connect";
             }
+        }
+
+        private void SerialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
+        {
+            MessageBox.Show("Got data!");
         }
 
         //Send string
@@ -159,26 +166,38 @@ namespace SerialPort_GUI
             {
                 string newBytes = ""; //data data in this update, used in autoscroll feature
                 newBytes = serialPort.ReadExisting(); //get data
-                data += newBytes; //save it 
+
+                //  TODO here we need a stringbuilder
+
+                //data += newBytes; //save it 
+                sb.Append(newBytes);
                 byReceived += (ulong) newBytes.Length;
                 byReceivedN.Text = formatData(byReceived); //update status strip
+                
 
                 /*This manages the autoscroll, sadly after some time 
                  * the label form reaches its max size and stops updating.
                  * But no data is lost because all is saved into the main buffer
                  */
                 if (autoscrollMenu.Checked)
-                {
-                    if (data.Length < REFRESH_BUFF)
-                        outBox.Text = data;
-                    else
+                {   // This is extremely slow, use a AppendText instead
+                    //if (data.Length < REFRESH_BUFF)
+                        outBox.AppendText(newBytes);
+                    /*else
                         outBox.Text = data.Substring(data.Length - REFRESH_BUFF, REFRESH_BUFF);
-
-                    panel1.VerticalScroll.Value = panel1.VerticalScroll.Maximum; //autoscroll
+                        */
+                    //panel1.VerticalScroll.Value = panel1.VerticalScroll.Maximum; //autoscroll
+                    //This should scroll it to end, what is a caret BTW?
+                   /* outBox.SelectionStart = outBox.Text.Length;
+                    outBox.ScrollToCaret();
+                    */
                 }
                 else
                 {
-                    outBox.Text += newBytes;
+                    //int caretPos = outBox.Text.Length;
+                    //outBox.Text += newBytes;
+                    //outBox.Select(caretPos, 0);
+                    //outBox.ScrollToLine(outBox.GetLineIndexFromCharacterIndex(caretPos));
                 }                
             }
         }
