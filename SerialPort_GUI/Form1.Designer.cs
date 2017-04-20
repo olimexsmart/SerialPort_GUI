@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.ConnectB = new System.Windows.Forms.Button();
             this.COMpick = new System.Windows.Forms.ComboBox();
@@ -60,7 +59,6 @@
             this.aboutMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.infoMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.helpMeMenu = new System.Windows.Forms.ToolStripMenuItem();
-            this.timer = new System.Windows.Forms.Timer(this.components);
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.byReceivedText = new System.Windows.Forms.ToolStripStatusLabel();
             this.byReceivedN = new System.Windows.Forms.ToolStripStatusLabel();
@@ -357,11 +355,6 @@
             this.helpMeMenu.Size = new System.Drawing.Size(119, 22);
             this.helpMeMenu.Text = "Help me";
             // 
-            // timer
-            // 
-            this.timer.Interval = 25;
-            this.timer.Tick += new System.EventHandler(this.timer_Tick);
-            // 
             // statusStrip1
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -405,7 +398,7 @@
             // toolStripStatusLabel1
             // 
             this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            this.toolStripStatusLabel1.Size = new System.Drawing.Size(183, 19);
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(152, 19);
             this.toolStripStatusLabel1.Spring = true;
             this.toolStripStatusLabel1.Text = " ";
             // 
@@ -476,7 +469,6 @@
         private System.Windows.Forms.ToolStripMenuItem infoMenu;
         private System.Windows.Forms.ToolStripMenuItem helpMeMenu;
         private System.Windows.Forms.ToolStripMenuItem autoscrollMenu;
-        private System.Windows.Forms.Timer timer;
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel byReceivedText;
         private System.Windows.Forms.ToolStripStatusLabel byReceivedN;

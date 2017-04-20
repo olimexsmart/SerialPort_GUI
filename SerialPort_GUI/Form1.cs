@@ -73,11 +73,11 @@ namespace SerialPort_GUI
             {
                 //Instance with all parameters
                 serialPort = new SerialPort(COMpick.SelectedItem.ToString(), baud, Parity.None, 8, StopBits.One);
+                serialPort.ReceivedBytesThreshold = 100;
                 serialPort.DataReceived += SerialPort_DataReceived;
                 try
                 {
-                    serialPort.Open();
-                    timer.Start();
+                    serialPort.Open();                    
                     connected = true;
                     outBox.Text = "";
                     data = "";
@@ -104,8 +104,7 @@ namespace SerialPort_GUI
             }
             else if(serialPort.IsOpen) //else nothing, if the cable is disconnected when the port is open, the .close() will crash.
             {
-                connected = false;
-                timer.Stop();
+                connected = false;                
                 serialPort.Close();
 
                 toolStatus.Text = "Disconnected";
@@ -115,7 +114,25 @@ namespace SerialPort_GUI
 
         private void SerialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
-            MessageBox.Show("Got data!");
+            if (serialPort.BytesToRead > 0)
+            {
+                string newBytes = ""; //data data in this update, used in autoscroll feature
+                newBytes = serialPort.ReadExisting(); //get data
+
+                sb.Append(newBytes);
+                byReceived += (ulong)newBytes.Length;
+                byReceivedN.Text = formatData(byReceived); //update status strip
+
+                if (autoscrollMenu.Checked)
+                {
+                    outBox.AppendText(newBytes);                
+                }
+                else
+                {
+
+                }
+            }
+
         }
 
         //Send string
@@ -162,44 +179,6 @@ namespace SerialPort_GUI
         //Update the form with new data every 10 millis
         private void timer_Tick(object sender, EventArgs e)
         {
-            if (serialPort.BytesToRead > 0)
-            {
-                string newBytes = ""; //data data in this update, used in autoscroll feature
-                newBytes = serialPort.ReadExisting(); //get data
-
-                //  TODO here we need a stringbuilder
-
-                //data += newBytes; //save it 
-                sb.Append(newBytes);
-                byReceived += (ulong) newBytes.Length;
-                byReceivedN.Text = formatData(byReceived); //update status strip
-                
-
-                /*This manages the autoscroll, sadly after some time 
-                 * the label form reaches its max size and stops updating.
-                 * But no data is lost because all is saved into the main buffer
-                 */
-                if (autoscrollMenu.Checked)
-                {   // This is extremely slow, use a AppendText instead
-                    //if (data.Length < REFRESH_BUFF)
-                        outBox.AppendText(newBytes);
-                    /*else
-                        outBox.Text = data.Substring(data.Length - REFRESH_BUFF, REFRESH_BUFF);
-                        */
-                    //panel1.VerticalScroll.Value = panel1.VerticalScroll.Maximum; //autoscroll
-                    //This should scroll it to end, what is a caret BTW?
-                   /* outBox.SelectionStart = outBox.Text.Length;
-                    outBox.ScrollToCaret();
-                    */
-                }
-                else
-                {
-                    //int caretPos = outBox.Text.Length;
-                    //outBox.Text += newBytes;
-                    //outBox.Select(caretPos, 0);
-                    //outBox.ScrollToLine(outBox.GetLineIndexFromCharacterIndex(caretPos));
-                }                
-            }
         }
 
         private void saveFileMenu_Click(object sender, EventArgs e)
