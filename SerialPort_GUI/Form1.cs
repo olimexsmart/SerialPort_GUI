@@ -73,8 +73,8 @@ namespace SerialPort_GUI
             {
                 //Instance with all parameters
                 serialPort = new SerialPort(COMpick.SelectedItem.ToString(), baud, Parity.None, 8, StopBits.One);
-                serialPort.ReceivedBytesThreshold = 100;
-                serialPort.DataReceived += SerialPort_DataReceived;
+                serialPort.ReceivedBytesThreshold = 5;
+                serialPort.DataReceived += SerialPort_DataReceived; //Event attach
                 try
                 {
                     serialPort.Open();                    
@@ -129,7 +129,7 @@ namespace SerialPort_GUI
                 }
                 else
                 {
-
+                    outBox.Text += newBytes;
                 }
             }
 
@@ -174,11 +174,6 @@ namespace SerialPort_GUI
         private void quitMenu_Click(object sender, EventArgs e)
         {
             Application.Exit();
-        }
-
-        //Update the form with new data every 10 millis
-        private void timer_Tick(object sender, EventArgs e)
-        {
         }
 
         private void saveFileMenu_Click(object sender, EventArgs e)
